@@ -220,24 +220,24 @@ App.focusOrStart = function ( title ) {
 // Key combinations
 var hyper = ['ctrl','alt','cmd','shift'];
 var mash  = ['ctrl','alt','cmd'];
+var oppose  = ['shift','cmd'];
 
 // Screen placement movement
-api.bind('h', mash, function() { to_left(1, 2); });          // left
-api.bind('l', mash, function() { to_right(1, 2); });         // right
-api.bind('k', mash, function() { to_top(1, 2); });           // up
-api.bind('j', mash, function() { to_bottom(1, 2); });        // down
-api.bind('.', mash, function() { to_bottom_right(1, 2); });  // bottom-right
-api.bind('n', mash, function() { to_bottom_left(1, 2); });   // bottom-left
-api.bind('p', mash, function() { to_top_right(1, 2); });     // top-right
-api.bind('y', mash, function() { to_top_left(1, 2); });      // top-left
+api.bind('h', oppose, function() { to_left(1, 2); });          // left
+api.bind('l', oppose, function() { to_right(1, 2); });         // right
+api.bind('k', oppose, function() { to_top(1, 2); });           // up
+api.bind('j', oppose, function() { to_bottom(1, 2); });        // down
+api.bind('.', oppose, function() { to_bottom_right(1, 2); });  // bottom-right
+api.bind('n', oppose, function() { to_bottom_left(1, 2); });   // bottom-left
+api.bind('p', oppose, function() { to_top_right(1, 2); });     // top-right
+api.bind('y', oppose, function() { to_top_left(1, 2); });      // top-left
 
 // Monitor movement
 api.bind('left', mash, left_one_monitor);
 api.bind('right', mash, right_one_monitor);
 
 // Full screen
-api.bind('space', hyper, full_screen);
-api.bind('space', mash, full_screen);
+api.bind('space', oppose, full_screen);
 api.bind('i', mash, full_screen);
 
 // Focus
@@ -254,5 +254,4 @@ api.bind('f11', ['shift', 'cmd'], function() {App.focusOrStart('google chrome ca
 api.bind('f11', ['cmd'], function() {App.focusOrStart('google chrome');});
 api.bind('f12', ['cmd'], function() {App.focusOrStart('notes');});
 api.bind('f', ['ctrl', 'shift', 'cmd'], function() {App.focusOrStart('evernote');});
-
 
