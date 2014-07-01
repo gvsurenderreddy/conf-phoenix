@@ -233,12 +233,12 @@ api.bind('p', oppose, function() { to_top_right(1, 2); });     // top-right
 api.bind('y', oppose, function() { to_top_left(1, 2); });      // top-left
 
 // Monitor movement
-api.bind('left', mash, left_one_monitor);
-api.bind('right', mash, right_one_monitor);
+api.bind('u', oppose, left_one_monitor);
+api.bind('o', oppose, right_one_monitor);
 
 // Full screen
 api.bind('space', oppose, full_screen);
-api.bind('i', mash, full_screen);
+api.bind('i', oppose, full_screen);
 
 // Focus
 api.bind('h', hyper, function() {focus(LEFT);});
