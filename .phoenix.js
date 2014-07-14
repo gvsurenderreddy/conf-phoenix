@@ -247,7 +247,7 @@ api.bind('k', hyper, function() {focus(UP);});
 api.bind('j', hyper, function() {focus(DOWN);});
 
 // Launcher
-api.bind('e',   ['cmd'], function() {App.focusOrStart('path finder');});
+api.bind('f5',   ['cmd'], function() {App.focusOrStart('forklift');});
 api.bind('f9',  ['cmd'], function() {App.focusOrStart('emacs');});
 api.bind('f10', ['cmd'], function() {App.focusOrStart('iterm');});
 api.bind('f11', ['shift', 'cmd'], function() {App.focusOrStart('google chrome canary');});
