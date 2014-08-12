@@ -237,6 +237,10 @@ api.bind('u', mash, left_one_monitor);
 api.bind('o', mash, right_one_monitor);
 
 // Full screen
+<<<<<<< HEAD
+=======
+api.bind('space', mash, full_screen);
+>>>>>>> 0eaddb0f478bce357152fb358b787e26d52e8c69
 api.bind('i', mash, full_screen);
 
 // Focus
@@ -246,7 +250,11 @@ api.bind('k', hyper, function() {focus(UP);});
 api.bind('j', hyper, function() {focus(DOWN);});
 
 // Launcher
+<<<<<<< HEAD
 api.bind('e',   ['cmd'], function() {App.focusOrStart('forklift');});
+=======
+api.bind('f5',   ['cmd'], function() {App.focusOrStart('forklift');});
+>>>>>>> 0eaddb0f478bce357152fb358b787e26d52e8c69
 api.bind('f9',  ['cmd'], function() {App.focusOrStart('emacs');});
 api.bind('f10', ['cmd'], function() {App.focusOrStart('iterm');});
 api.bind('f11', ['shift', 'cmd'], function() {App.focusOrStart('google chrome canary');});
