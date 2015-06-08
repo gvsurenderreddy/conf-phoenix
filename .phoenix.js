@@ -142,4 +142,4 @@ api.bind('f9', ['cmd'], function() { App.focusOrStart('sublime text'); });
 api.bind('f10', ['cmd'], function() { App.focusOrStart('iterm'); });
 api.bind('f11', ['shift', 'cmd'], function() { App.focusOrStart('google chrome canary'); });
 api.bind('f11', ['cmd'], function() { App.focusOrStart('google chrome'); });
-api.bind('f', ['shift', 'cmd'], function() { App.focusOrStart('easyfind'); });
+api.bind('f', KEY_COMBINATIONS.mash, function() { App.focusOrStart('easyfind'); });
