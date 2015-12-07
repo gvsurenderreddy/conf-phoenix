@@ -10,9 +10,11 @@ var DIRECTIONS = {
 };
 
 var KEY_COMBINATIONS = {
+    cmd: ['cmd'],
     hyper: ['ctrl', 'alt', 'cmd', 'shift'],
     mash: ['ctrl', 'alt', 'cmd'],
     oppose: ['shift', 'cmd'],
+    none: [],
 };
 
 // Focus.
@@ -137,9 +139,9 @@ api.bind('k', KEY_COMBINATIONS.hyper, function() { focus(DIRECTIONS.UP); });
 api.bind('j', KEY_COMBINATIONS.hyper, function() { focus(DIRECTIONS.DOWN); });
 
 // Launcher.
-api.bind('f5', ['cmd'], function() { App.focusOrStart('path finder'); });
-api.bind('f9', ['cmd'], function() { App.focusOrStart('sublime text'); });
-api.bind('f10', ['cmd'], function() { App.focusOrStart('iterm'); });
-api.bind('f11', ['shift', 'cmd'], function() { App.focusOrStart('google chrome canary'); });
-api.bind('f11', ['cmd'], function() { App.focusOrStart('google chrome'); });
-api.bind('f', KEY_COMBINATIONS.mash, function() { App.focusOrStart('find any file'); });
+api.bind('f5', KEY_COMBINATIONS.cmd, function() { App.focusOrStart('path finder'); });
+api.bind('f8', KEY_COMBINATIONS.cmd, function() { App.focusOrStart('gitup'); });
+api.bind('f9', KEY_COMBINATIONS.cmd, function() { App.focusOrStart('sublime text'); });
+api.bind('f10', KEY_COMBINATIONS.cmd, function() { App.focusOrStart('iterm'); });
+api.bind('f11', KEY_COMBINATIONS.cmd, function() { App.focusOrStart('google chrome'); });
+api.bind('f12', KEY_COMBINATIONS.cmd, function() { App.focusOrStart('google chrome canary'); });
