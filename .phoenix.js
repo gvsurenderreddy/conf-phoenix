@@ -1,147 +1,171 @@
-var EMOTICONS = {
-    smiley: "ツ",
-};
+// Constants.
+var FULL = 0;
+var LEFT = 1;
+var RIGHT = 2;
 
-var DIRECTIONS = {
-    LEFT: 0,
-    RIGHT: 1,
-    UP: 2,
-    DOWN: 3,
-};
+// Hotkeys.
+var keys = [];
 
-var KEY_COMBINATIONS = {
-    cmd: ['cmd'],
-    hyper: ['ctrl', 'alt', 'cmd', 'shift'],
-    mash: ['ctrl', 'alt', 'cmd'],
-    oppose: ['shift', 'cmd'],
-    none: [],
-};
+// Key combinations.
+var mash = ['ctrl', 'alt', 'cmd'];
+var cmd = ['cmd'];
 
-// Focus.
-function focus(dir) {
-    var win = Window.focusedWindow();
-    if (win) {
-        if (dir == DIRECTIONS.LEFT) win.focusWindowLeft();
-        else if (dir == DIRECTIONS.RIGHT) win.focusWindowRight();
-        else if (dir == DIRECTIONS.UP) win.focusWindowUp();
-        else if (dir == DIRECTIONS.DOWN) win.focusWindowDown();
-    }
+function alert(message) {
+    var modal = new Modal();
+    modal.message = message;
+    modal.duration = 1;
+    modal.show();
 }
 
-// Start or select applications.
-App.allWithTitle = function(title) {
-    return _(this.runningApps()).filter(function(app) {
-        if (app.title() === title) {
-            return true;
-        }
-    });
-};
-App.focusOrStart = function(title) {
-    var apps = App.allWithTitle(title);
-    if (_.isEmpty(apps)) {
-        api.alert(EMOTICONS.smiley + " Starting " + title);
-        api.launch(title);
+function computeNewFrameFromGrid(screen, grid) {
+    var screenRect = screen.visibleFrameInRectangle();
+    if (!screenRect) {
         return;
     }
-};
 
-function isAlreadyAt(x, y, w, h, screen) {
-    var win = Window.focusedWindow();
-    if (win) {
-        var frame = win.frame();
-        var screenFrame = screen.frameWithoutDockOrMenu();
+    var unitX = screenRect.width / 2;
+    var unitY = screenRect.height / 2;
 
-        unitHeight = screenFrame.height / 2;
-        unitWidth = screenFrame.width / 2;
+    var newFrame = {
+        x: screenRect.x + (grid.x * unitX),
+        y: screenRect.y + (grid.y * unitY),
+        width: grid.width * unitX,
+        height: grid.height * unitY,
+    };
 
-        if ((frame.x - (screenFrame.x + x * unitWidth)) === 0 &&
-            (frame.y - (screenFrame.y + y * unitHeight)) === 0 &&
-            (frame.height - (h + 1) * unitHeight) < 10 &&
-            (frame.width - (w + 1) * unitWidth) < 10) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    return null;
+    return newFrame;
 }
 
-function setWindowLocation(x, y, w, h, screen) {
+function isAtGrid(grid) {
     var win = Window.focusedWindow();
-    if (win) {
-        var frame = win.frame();
-        var screenFrame = screen.frameWithoutDockOrMenu();
+    if (!win) {
+        return;
+    }
 
-        unitHeight = screenFrame.height / 2;
-        unitWidth = screenFrame.width / 2;
+    var newFrame = computeNewFrameFromGrid(win.screen(), grid);
 
-        frame.height = (h + 1) * unitHeight;
-        frame.width = (w + 1) * unitWidth;
-        frame.x = screenFrame.x + x * unitWidth;
-        frame.y = screenFrame.y + y * unitHeight;
-        win.setFrame(frame);
-        return frame;
+    if (win.topLeft().x !== newFrame.x) {
+        return false;
+    }
+
+    if (win.size().width !== newFrame.width) {
+        return false;
+    }
+
+    if (Math.abs(win.size().height - newFrame.height) > 10) {
+        return false;
+    }
+
+    return true;
+}
+
+function moveToGrid(screen, grid) {
+    var win = Window.focusedWindow();
+    if (!win) {
+        return;
+    }
+
+    var newFrame = computeNewFrameFromGrid(screen, grid);
+    win.setFrame(newFrame);
+}
+
+function move(win, newGrid, direction) {
+    // Move to the new location.
+    if (!isAtGrid(newGrid)) {
+        moveToGrid(win.screen(), newGrid);
+        return;
+    }
+
+    // Full screen. Don't do anything.
+    if (direction === FULL) {
+        return;
+    }
+
+    // Need to move screens.
+    // Flip the 'x' location so that we move by screen halves.
+    newGrid.x = 1 - newGrid.x;
+    if (direction === LEFT) {
+        moveToGrid(win.screen().next(), newGrid);
+    } else {
+        moveToGrid(win.screen().previous(), newGrid);
     }
 }
 
-function fullScreen() {
+/* Window movement */
+
+// Maximize.
+keys.push(Phoenix.bind('i', mash, function() {
     var win = Window.focusedWindow();
-    if (win) {
-        var screenFrame = Window.focusedWindow().screen().frameWithoutDockOrMenu();
-        win.setFrame(screenFrame);
-    }
+    move(win, {x:0, y:0, width:2, height:2}, FULL);
+}));
+
+// Left half.
+keys.push(Phoenix.bind('h', mash, function() {
+    var win = Window.focusedWindow();
+    move(win, {x:0, y:0, width:1, height:2}, LEFT);
+}));
+
+// Right half.
+keys.push(Phoenix.bind('l', mash, function() {
+    var win = Window.focusedWindow();
+    move(win, {x:1, y:0, width:1, height:2}, RIGHT);
+}));
+
+// Top-left.
+keys.push(Phoenix.bind('y', mash, function() {
+    var win = Window.focusedWindow();
+    move(win, {x:0, y:0, width:1, height:1}, LEFT);
+}));
+keys.push(Phoenix.bind('u', mash, function() {
+    var win = Window.focusedWindow();
+    move(win, {x:0, y:0, width:1, height:1}, LEFT);
+}));
+
+// Top-right.
+keys.push(Phoenix.bind('p', mash, function() {
+    var win = Window.focusedWindow();
+    move(win, {x:1, y:0, width:1, height:1}, RIGHT);
+}));
+keys.push(Phoenix.bind('[', mash, function() {
+    var win = Window.focusedWindow();
+    move(win, {x:1, y:0, width:1, height:1}, RIGHT);
+}));
+
+// Bottom-left.
+keys.push(Phoenix.bind('n', mash, function() {
+    var win = Window.focusedWindow();
+    move(win, {x:0, y:1, width:1, height:1}, LEFT);
+}));
+keys.push(Phoenix.bind('b', mash, function() {
+    var win = Window.focusedWindow();
+    move(win, {x:0, y:1, width:1, height:1}, LEFT);
+}));
+
+// Bottom-right.
+keys.push(Phoenix.bind('.', mash, function() {
+    var win = Window.focusedWindow();
+    move(win, {x:1, y:1, width:1, height:1}, RIGHT);
+}));
+keys.push(Phoenix.bind('/', mash, function() {
+    var win = Window.focusedWindow();
+    move(win, {x:1, y:1, width:1, height:1}, RIGHT);
+}));
+
+
+/* Hotkeys */
+
+function appLauncher(appName) {
+    return function() {
+        var app = App.launch(appName);
+        app.focus();
+
+        alert(appName);
+    };
 }
 
-function move(x, y, w, h, direction) {
-    var win = Window.focusedWindow();
-    if (win) {
-        var currentScreen = win.screen();
-        if (isAlreadyAt(x, y, w, h, currentScreen)) {
-            var nextScreen;
-            if (direction === DIRECTIONS.LEFT) {
-                nextScreen = currentScreen.nextScreen();
-            } else {
-                nextScreen = currentScreen.previousScreen();
-            }
-            setWindowLocation(1-x, y, w, h, nextScreen);
-        } else {
-            setWindowLocation(x, y, w, h, currentScreen);
-        }
-    }
-}
-
-function moveLeft()      { move(0,0,0,1, DIRECTIONS.LEFT); }
-function moveLeftUp()    { move(0,0,0,0, DIRECTIONS.LEFT); }
-function moveLeftDown()  { move(0,1,0,0, DIRECTIONS.LEFT); }
-function moveRight()     { move(1,0,0,1, DIRECTIONS.RIGHT); }
-function moveRightUp()   { move(1,0,0,0, DIRECTIONS.RIGHT); }
-function moveRightDown() { move(1,1,0,0, DIRECTIONS.RIGHT); }
-
-// Window movement.
-api.bind('h', KEY_COMBINATIONS.mash, function() { moveLeft(); });
-api.bind('y', KEY_COMBINATIONS.mash, function() { moveLeftUp(); });
-api.bind('u', KEY_COMBINATIONS.mash, function() { moveLeftUp(); });
-api.bind('n', KEY_COMBINATIONS.mash, function() { moveLeftDown(); });
-api.bind('b', KEY_COMBINATIONS.mash, function() { moveLeftDown(); });
-api.bind('l', KEY_COMBINATIONS.mash, function() { moveRight(); });
-api.bind('p', KEY_COMBINATIONS.mash, function() { moveRightUp(); });
-api.bind('o', KEY_COMBINATIONS.mash, function() { moveRightUp(); });
-api.bind('.', KEY_COMBINATIONS.mash, function() { moveRightDown(); });
-api.bind('/', KEY_COMBINATIONS.mash, function() { moveRightDown(); });
-
-// Full screen.
-api.bind('i', KEY_COMBINATIONS.mash, fullScreen);
-
-// Focus.
-api.bind('h', KEY_COMBINATIONS.hyper, function() { focus(DIRECTIONS.LEFT); });
-api.bind('l', KEY_COMBINATIONS.hyper, function() { focus(DIRECTIONS.RIGHT); });
-api.bind('k', KEY_COMBINATIONS.hyper, function() { focus(DIRECTIONS.UP); });
-api.bind('j', KEY_COMBINATIONS.hyper, function() { focus(DIRECTIONS.DOWN); });
-
-// Launcher.
-api.bind('f5', KEY_COMBINATIONS.cmd, function() { App.focusOrStart('path finder'); });
-api.bind('f8', KEY_COMBINATIONS.cmd, function() { App.focusOrStart('gitup'); });
-api.bind('f9', KEY_COMBINATIONS.cmd, function() { App.focusOrStart('sublime text'); });
-api.bind('f10', KEY_COMBINATIONS.cmd, function() { App.focusOrStart('iterm'); });
-api.bind('f11', KEY_COMBINATIONS.cmd, function() { App.focusOrStart('google chrome'); });
-api.bind('f12', KEY_COMBINATIONS.cmd, function() { App.focusOrStart('google chrome canary'); });
+keys.push(Phoenix.bind('f5', cmd, appLauncher('path finder')));
+keys.push(Phoenix.bind('f8', cmd, appLauncher('gitup')));
+keys.push(Phoenix.bind('f9', cmd, appLauncher('sublime text')));
+keys.push(Phoenix.bind('f10', cmd, appLauncher('iterm')));
+keys.push(Phoenix.bind('f11', cmd, appLauncher('google chrome')));
+keys.push(Phoenix.bind('f12', cmd, appLauncher('google chrome canary')));
