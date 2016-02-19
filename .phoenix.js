@@ -48,7 +48,7 @@ function isAtGrid(grid) {
         return false;
     }
 
-    if (win.size().width - newFrame.width > 10) {
+    if (win.size().width - newFrame.width > 20) {
         return false;
     }
 
@@ -69,14 +69,15 @@ function moveToGrid(screen, grid) {
 }
 
 function move(win, newGrid, direction) {
-    // Move to the new location.
-    if (!isAtGrid(newGrid)) {
+    // Full screen.
+    if (direction === FULL) {
         moveToGrid(win.screen(), newGrid);
         return;
     }
 
-    // Full screen. Don't do anything.
-    if (direction === FULL) {
+    // Move to the new location.
+    if (!isAtGrid(newGrid)) {
+        moveToGrid(win.screen(), newGrid);
         return;
     }
 
