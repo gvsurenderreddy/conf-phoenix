@@ -48,14 +48,13 @@ function isAtGrid(grid) {
         return false;
     }
 
-    if (win.size().width !== newFrame.width) {
+    if (win.size().width - newFrame.width > 10) {
         return false;
     }
 
-    if (Math.abs(win.size().height - newFrame.height) > 10) {
+    if (Math.abs(win.size().height - newFrame.height) > 20) {
         return false;
     }
-
     return true;
 }
 
