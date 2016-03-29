@@ -5,15 +5,19 @@ var RIGHT = 2;
 
 // Hotkeys.
 var keys = [];
+var isHotkeysEnabled = true;
 
 // Key combinations.
 var mash = ['ctrl', 'alt', 'cmd'];
 var cmd = ['cmd'];
+var cmdShift = ['cmd', 'shift'];
+var none = [];
 
-function alert(message) {
+function alert(message, duration) {
+    duration = duration || 1;
     var modal = new Modal();
     modal.message = message;
-    modal.duration = 1;
+    modal.duration = duration;
     modal.show();
 }
 
@@ -91,81 +95,110 @@ function move(win, newGrid, direction) {
     }
 }
 
+function appLauncher(appName) {
+    return function() {
+        if (isHotkeysEnabled === true) {
+            var app = App.launch(appName);
+            app.focus();
+
+            alert(appName);
+        }
+    };
+}
+
+
 /* Window movement */
 
 // Maximize.
 keys.push(Phoenix.bind('i', mash, function() {
     var win = Window.focusedWindow();
-    move(win, {x:0, y:0, width:2, height:2}, FULL);
+    move(win, { x: 0, y: 0, width: 2, height: 2 }, FULL);
 }));
 
 // Left half.
 keys.push(Phoenix.bind('h', mash, function() {
     var win = Window.focusedWindow();
-    move(win, {x:0, y:0, width:1, height:2}, LEFT);
+    move(win, { x: 0, y: 0, width: 1, height: 2 }, LEFT);
 }));
 
 // Right half.
 keys.push(Phoenix.bind('l', mash, function() {
     var win = Window.focusedWindow();
-    move(win, {x:1, y:0, width:1, height:2}, RIGHT);
+    var win = Window.focusedWindow();
+    move(win, { x: 1, y: 0, width: 1, height: 2 }, RIGHT);
 }));
 
 // Top-left.
 keys.push(Phoenix.bind('y', mash, function() {
     var win = Window.focusedWindow();
-    move(win, {x:0, y:0, width:1, height:1}, LEFT);
+    move(win, { x: 0, y: 0, width: 1, height: 1 }, LEFT);
 }));
 keys.push(Phoenix.bind('u', mash, function() {
     var win = Window.focusedWindow();
-    move(win, {x:0, y:0, width:1, height:1}, LEFT);
+    move(win, { x: 0, y: 0, width: 1, height: 1 }, LEFT);
 }));
 
 // Top-right.
 keys.push(Phoenix.bind('p', mash, function() {
     var win = Window.focusedWindow();
-    move(win, {x:1, y:0, width:1, height:1}, RIGHT);
+    move(win, { x: 1, y: 0, width: 1, height: 1 }, RIGHT);
 }));
 keys.push(Phoenix.bind('[', mash, function() {
     var win = Window.focusedWindow();
-    move(win, {x:1, y:0, width:1, height:1}, RIGHT);
+    move(win, { x: 1, y: 0, width: 1, height: 1 }, RIGHT);
 }));
 
 // Bottom-left.
 keys.push(Phoenix.bind('n', mash, function() {
     var win = Window.focusedWindow();
-    move(win, {x:0, y:1, width:1, height:1}, LEFT);
+    move(win, { x: 0, y: 1, width: 1, height: 1 }, LEFT);
 }));
 keys.push(Phoenix.bind('b', mash, function() {
     var win = Window.focusedWindow();
-    move(win, {x:0, y:1, width:1, height:1}, LEFT);
+    move(win, { x: 0, y: 1, width: 1, height: 1 }, LEFT);
 }));
 
 // Bottom-right.
 keys.push(Phoenix.bind('.', mash, function() {
     var win = Window.focusedWindow();
-    move(win, {x:1, y:1, width:1, height:1}, RIGHT);
+    move(win, { x: 1, y: 1, width: 1, height: 1 }, RIGHT);
 }));
 keys.push(Phoenix.bind('/', mash, function() {
     var win = Window.focusedWindow();
-    move(win, {x:1, y:1, width:1, height:1}, RIGHT);
+    move(win, { x: 1, y: 1, width: 1, height: 1 }, RIGHT);
 }));
 
 
-/* Hotkeys */
 
-function appLauncher(appName) {
-    return function() {
-        var app = App.launch(appName);
-        app.focus();
-
-        alert(appName);
-    };
+function enableHotkeys() {
+    isHotkeysEnabled = true;
+    alert("Applauncher hotkeys ENABLED");
 }
 
-keys.push(Phoenix.bind('f5', cmd, appLauncher('path finder')));
-keys.push(Phoenix.bind('f8', cmd, appLauncher('gitup')));
-keys.push(Phoenix.bind('f9', cmd, appLauncher('sublime text')));
-keys.push(Phoenix.bind('f10', cmd, appLauncher('iterm')));
-keys.push(Phoenix.bind('f11', cmd, appLauncher('google chrome')));
-keys.push(Phoenix.bind('f12', cmd, appLauncher('google chrome canary')));
+function disableHotkeys() {
+    isHotkeysEnabled = false;
+    alert("Applauncher hotkeys disabled");
+}
+
+function toggleHotkeys() {
+    if (isHotkeysEnabled === true) {
+        disableHotkeys();
+    } else {
+        enableHotkeys();
+    }
+}
+
+/* Hotkeys */
+
+keys.push(Phoenix.bind('f1', cmd, toggleHotkeys));
+
+keys.push(Phoenix.bind('f5', none, appLauncher('path finder')));
+keys.push(Phoenix.bind('f9', none, appLauncher('sublime text')));
+keys.push(Phoenix.bind('f10', none, appLauncher('iterm')));
+keys.push(Phoenix.bind('f11', none, appLauncher('google chrome')));
+keys.push(Phoenix.bind('f12', none, appLauncher('google chrome canary')));
+
+keys.push(Phoenix.bind('e', cmd, appLauncher('path finder')));
+keys.push(Phoenix.bind('h', cmd, appLauncher('sublime text')));
+keys.push(Phoenix.bind('j', cmd, appLauncher('iterm')));
+keys.push(Phoenix.bind('k', cmd, appLauncher('google chrome')));
