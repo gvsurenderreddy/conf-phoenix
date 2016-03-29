@@ -9,6 +9,8 @@ var keys = [];
 // Key combinations.
 var mash = ['ctrl', 'alt', 'cmd'];
 var cmd = ['cmd'];
+var none = [];
+var cmdShift = ['cmd', 'shift'];
 
 function alert(message) {
     var modal = new Modal();
@@ -163,9 +165,13 @@ function appLauncher(appName) {
     };
 }
 
-keys.push(Phoenix.bind('f5', cmd, appLauncher('path finder')));
-keys.push(Phoenix.bind('f8', cmd, appLauncher('gitup')));
-keys.push(Phoenix.bind('f9', cmd, appLauncher('sublime text')));
-keys.push(Phoenix.bind('f10', cmd, appLauncher('iterm')));
-keys.push(Phoenix.bind('f11', cmd, appLauncher('google chrome')));
-keys.push(Phoenix.bind('f12', cmd, appLauncher('google chrome canary')));
+// keys.push(Phoenix.bind('f5', cmd, appLauncher('path finder')));
+keys.push(Phoenix.bind('f9', none, appLauncher('sublime text')));
+keys.push(Phoenix.bind('f10', none, appLauncher('iterm')));
+keys.push(Phoenix.bind('f11', none, appLauncher('google chrome')));
+keys.push(Phoenix.bind('f12', none, appLauncher('google chrome canary')));
+
+keys.push(Phoenix.bind('e', cmd, appLauncher('path finder')));
+keys.push(Phoenix.bind('u', cmd, appLauncher('sublime text')));
+keys.push(Phoenix.bind('i', cmd, appLauncher('iterm')));
+keys.push(Phoenix.bind('o', cmd, appLauncher('google chrome')));
