@@ -192,11 +192,11 @@ function toggleHotkeys() {
 
 keys.push(Phoenix.bind('f1', cmd, toggleHotkeys));
 
-keys.push(Phoenix.bind('f5', none, appLauncher('path finder')));
-keys.push(Phoenix.bind('f9', none, appLauncher('sublime text')));
-keys.push(Phoenix.bind('f10', none, appLauncher('iterm')));
-keys.push(Phoenix.bind('f11', none, appLauncher('google chrome')));
-keys.push(Phoenix.bind('f12', none, appLauncher('google chrome canary')));
+keys.push(Phoenix.bind('f5', cmd, appLauncher('path finder')));
+keys.push(Phoenix.bind('f9', cmd, appLauncher('sublime text')));
+keys.push(Phoenix.bind('f10', cmd, appLauncher('iterm')));
+keys.push(Phoenix.bind('f11', cmd, appLauncher('google chrome')));
+keys.push(Phoenix.bind('f12', cmd, appLauncher('google chrome canary')));
 
 keys.push(Phoenix.bind('e', cmd, appLauncher('path finder')));
 keys.push(Phoenix.bind('h', cmd, appLauncher('sublime text')));
