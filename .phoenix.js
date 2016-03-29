@@ -9,6 +9,7 @@ var isHotkeysEnabled = true;
 
 // Key combinations.
 var mash = ['ctrl', 'alt', 'cmd'];
+var ctrl = ['ctrl'];
 var cmd = ['cmd'];
 var cmdShift = ['cmd', 'shift'];
 var none = [];
@@ -198,7 +199,7 @@ keys.push(Phoenix.bind('f10', cmd, appLauncher('iterm')));
 keys.push(Phoenix.bind('f11', cmd, appLauncher('google chrome')));
 keys.push(Phoenix.bind('f12', cmd, appLauncher('google chrome canary')));
 
-keys.push(Phoenix.bind('e', cmd, appLauncher('path finder')));
-keys.push(Phoenix.bind('h', cmd, appLauncher('sublime text')));
-keys.push(Phoenix.bind('j', cmd, appLauncher('iterm')));
-keys.push(Phoenix.bind('k', cmd, appLauncher('google chrome')));
+keys.push(Phoenix.bind('e', ctrl, appLauncher('path finder')));
+keys.push(Phoenix.bind('h', ctrl, appLauncher('sublime text')));
+keys.push(Phoenix.bind('j', ctrl, appLauncher('iterm')));
+keys.push(Phoenix.bind('k', ctrl, appLauncher('google chrome')));
