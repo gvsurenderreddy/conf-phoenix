@@ -6,6 +6,7 @@ var RIGHT = 2;
 // Hotkeys.
 var keys = [];
 var isHotkeysEnabled = true;
+var isFullScreen = false;
 
 // Key combinations.
 var mash = ['ctrl', 'alt', 'cmd'];
@@ -72,21 +73,9 @@ function moveToGrid(screen, grid) {
 
     var newFrame = computeNewFrameFromGrid(screen, grid);
 
-    // NOTE: setFrame() is buggy, at least for Phoenix v2.0.1. The
-    // manifestation of the bug is that in a 3-monitor setup, when moving a
-    // full-screen window from the left-most monitor to the right-half of the
-    // same monitor (rightward direction), the top-left corner is taken to be
-    // the top-left point of the middle monitor. If the middle monitor has a
-    // menu bar (on OS X), then the window on the left-most monitor gets
-    // displaced from the top by the height of the menu bar.
-    //
+    win.setTopLeft({ x: newFrame.x, y: newFrame.y });
+    win.setSize({ width: newFrame.width, height: newFrame.height });
     // win.setFrame(newFrame);
-
-    // Workaround by using setSize() and setTopLeft() to simulate a setFrame().
-    // This does not have the bug.
-    win.setSize({width: newFrame.width, height: newFrame.height});
-    win.setTopLeft({x: newFrame.x, y: newFrame.y});
-
 }
 
 function move(win, newGrid, direction) {
@@ -96,7 +85,7 @@ function move(win, newGrid, direction) {
         return;
     }
 
-    // Move to the new location.
+    // Move to the new location without moving screens.
     if (!isAtGrid(newGrid)) {
         moveToGrid(win.screen(), newGrid);
         return;
