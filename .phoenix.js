@@ -199,6 +199,7 @@ function toggleHotkeys() {
 keys.push(Phoenix.bind('f1', cmd, toggleHotkeys));
 
 keys.push(Phoenix.bind('f5', cmd, appLauncher('path finder')));
+keys.push(Phoenix.bind('f6', cmd, appLauncher('sourcetree')));
 keys.push(Phoenix.bind('f7', cmd, appLauncher('sublime text')));
 keys.push(Phoenix.bind('f8', cmd, appLauncher('iterm')));
 keys.push(Phoenix.bind('f9', cmd, appLauncher('google chrome')));
