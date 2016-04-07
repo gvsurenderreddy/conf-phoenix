@@ -73,6 +73,7 @@ function moveToGrid(screen, grid) {
 
     var newFrame = computeNewFrameFromGrid(screen, grid);
 
+    win.setSize({ width: newFrame.width, height: newFrame.height });
     win.setTopLeft({ x: newFrame.x, y: newFrame.y });
     win.setSize({ width: newFrame.width, height: newFrame.height });
     // win.setFrame(newFrame);
